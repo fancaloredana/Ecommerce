@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BookHub</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="navbar-left">
+        <h1 class="navbar-brand">BookHub</h1>
+      </div>
+      <div class="navbar-middle">
+        <form id="search-form" class="search-form">
+          <input id="search-input" type="text" placeholder="Search for a book">
+          <button type="submit">Search</button>
+          <div id="search-results"></div>
+        </form>
+      </div>
+      <div class="navbar-right">
+        <button  id="cart-button" class="navbar-button">Cart</button>
+        <button  id="admin-button" class="navbar-button">Admin</button>
+      </div>
+    </nav>
+  </header>
+
+  <div id="book-list" class="card-container"></div>
+  
+  <footer>
+    <p>BookHub - All rights reserved &copy; 2023</p>
+  </footer>
+
+  <script src="src/index.js"></script>
+</body>
+</html>
