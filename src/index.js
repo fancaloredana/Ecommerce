@@ -53,7 +53,7 @@ function afiseazaCarti(carti) {
         const detailsButton = document.createElement('button');
         detailsButton.textContent = 'Details';
         detailsButton.addEventListener('click', () => {
-            window.location.href = `details.html?id=${carte.id}`;
+            window.location.pathname = `details.html?id=${carte.id}`;
         });
         card.appendChild(detailsButton);
 
