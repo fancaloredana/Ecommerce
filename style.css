@@ -407,3 +407,33 @@ input[type='number'] {
 .table tr:nth-of-type(odd) {
   background-color: beige;
 }
+
+/* Stilizare pentru ecrane mai mici */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+  .bookContainer {
+    margin-top: 60px;
+  }
+  .basket {
+    margin: 10px auto 20px auto;
+  }
+  .tableDiv {
+    margin-top: 20px;
+  }
+}
+
+/* Stilizare pentru ecrane mai mici */
+@media screen and (max-width: 480px) {
+  .table th,
+  .table td {
+    padding: 8px 10px;
+  }
+  
+}
+
+
+
+
+
