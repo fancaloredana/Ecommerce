@@ -1,40 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>BookHub - Cart</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookHub</title>
+    <link rel="stylesheet" 
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <nav class="navbar">
-      <div class="navbar-left">
-        <h1 class="navbar-brand">BookHub</h1>
+    <div class="container">
+      <div id="topnav"></div>
+      <div class="content">
+        <table class="basket">
+          <tr>
+            <td colspan="2" class="paddingBottom centerText"><h1>Shopping Cart</h1></td>
+          </tr>
+          <tr>
+            <td rowspan="2">
+              <a class="greenBtn buyBooksBtn"><i class="fa fa-credit-card marginRight"></i>Buy books</a>
+            </td>
+            <td>Items: <span class="items greenText"></span></td>
+          </tr>
+          <tr>
+            <td>Total Price: <span class="totalPrice greenText"></span></td>
+          </tr>
+        </table>
+        <div class="tableDiv"></div>
       </div>
-      <div class="navbar-middle">
-        <form id="search-form" class="search-form">
-          <input id="search-input" type="text" placeholder="Search for a book">
-          <button type="submit">Search</button>
-          <div id="search-results"></div>
-        </form>
-      </div>
-      <div class="navbar-right">
-        <button  id="cart-button" class="navbar-button">Cart</button>
-        <button  id="admin-button" class="navbar-button">Admin</button>
-      </div>
-    </nav>
-  </header>
-
-  <div id="cart-container" class="container">
-    <h2>Your Cart</h2>
-    <div id="cart-items"></div>
-    <div id="cart-total"></div>
-    <button id="checkout-button" class="btn">Checkout</button>
-  </div>
-  
-  <footer>
-    <p>BookHub - All rights reserved &copy; 2023</p>
-  </footer>
-
-  <script src="src/cart.js"></script>
+      <footer>
+        <p>BookHub - All rights reserved &copy; 2023</p>
+      </footer>
+    </div>
+    <script type="module" src="./src/cart.js"></script>
 </body>
 </html>

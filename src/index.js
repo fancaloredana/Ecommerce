@@ -1,89 +1,43 @@
-function searchBooks(event) {
-    event.preventDefault();
-    const searchInput = document.getElementById('search-input').value.trim().toLowerCase();
-    const searchResults = document.getElementById('search-results');
-    searchResults.innerHTML = '';
+import { navbar, basketItems } from "./navbar.js";
+navbar();
+basketItems();
 
-    fetch('https://632b4aa31090510116d6319b.mockapi.io/books')
-        .then((response) => response.json())
-        .then((data) => {
-            const filteredBooks = data.filter((carte) => {
-                return carte.title.toLowerCase().includes(searchInput);
-            });
-
-            if (filteredBooks.length > 0) {
-                afiseazaCarti(filteredBooks);
-            } else {
-                const noResults = document.createElement('p');
-                noResults.textContent = 'No books found.';
-                searchResults.appendChild(noResults);
-            }
-        })
-        .catch((error) => console.log(error));
-}
-
-document.getElementById('search-form').addEventListener('submit', searchBooks);
-
-function afiseazaCarti(carti) {
-    const container = document.getElementById('book-list');
-    container.innerHTML = '';
-
-    carti.forEach((carte) => {
-        const card = document.createElement('div');
-        card.classList.add('card');
-
-        const img = document.createElement('img');
-        img.src = carte.book_image;
-        img.alt = carte.title;
-        img.classList.add('book-image');
-        card.appendChild(img);
-
-        const title = document.createElement('h2');
-        title.textContent = carte.title;
-        card.appendChild(title);
-
-        const author = document.createElement('p');
-        author.textContent = `Author: ${carte.author}`;
-        card.appendChild(author);
-
-        const price = document.createElement('p');
-        price.textContent = `Price: $${carte.price}`;
-        card.appendChild(price);
-
-        const detailsButton = document.createElement('button');
-        detailsButton.textContent = 'Details';
-        detailsButton.addEventListener('click', () => {
-            window.location.pathname = `details.html?id=${carte.id}`;
-        });
-        card.appendChild(detailsButton);
-
-        container.appendChild(card);
-    });
-}
-
-fetch('https://632b4aa31090510116d6319b.mockapi.io/books')
-    .then((response) => response.json())
-    .then((data) => afiseazaCarti(data))
-    .catch((error) => console.log(error));
-
-
-function redirectToDetails(id) {
-	window.location.href = `details.html?id=${id}`;
-  }
-  
-  document.getElementById('book-list').addEventListener('click', function(event) {
-	if (event.target.classList.contains('details-button')) {
-	  const bookId = event.target.getAttribute('data-id');
-	  redirectToDetails(bookId);
+const createCard = (book) => {
+	if (!book || !book.book_image) {
+	  return '';
 	}
-  });
+    return `<div class='card centerText'>
+	  <img class="bookImage" src='${book.book_image}'/>
+	  <p class="capitalize blackText"><b>${book.title.toLowerCase()}</b></p>
+	  <p class="blackText">by ${book.author}</p>
+	  <div class="flexWrapCenter">
+		<p class="greenText largeFont inline">$${book.price}</p>
+		<a class="greenBtn marginLeft" href="details.html?id=${book.id}">
+		  <i class="fa fa-info-circle marginRight"></i>Details
+		</a>
+	  </div>
+	</div>`;
+  };
   
-  document.getElementById('cart-button').addEventListener('click', function() {
-	window.location.href = 'cart.html';
-  });
+  console.log(createCard());
   
-  document.getElementById('admin-button').addEventListener('click', function() {
-	window.location.href = 'admin.html';
-  });
+  const showBooks = async () => {
+	scroll(0, 0);
+	// Show loader
+	document.querySelector('.bookContainer').style.display = 'none';
+	document.querySelector('.loader').style.display = 'block';
+	// Fetch books
+	const result = await fetch('https://64a6862a096b3f0fcc7ff504.mockapi.io/books');
+	const books = await result.json();
+	// Show books
+	const bookCards = books.map((book) => createCard(book));
+	const cardString = bookCards.join('');
+	document.querySelector('.bookContainer').innerHTML = cardString;
+	// Hide loader
+	document.querySelector('.loader').style.display = 'none';
+	document.querySelector('.bookContainer').style.display = 'flex';
+  };
+  
+  window.addEventListener('DOMContentLoaded', showBooks);
   
   

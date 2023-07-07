@@ -1,74 +1,87 @@
-function displayCartItems() {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const cartItemsContainer = document.getElementById('cart-items');
-    cartItemsContainer.innerHTML = '';
-  
-    if (cartItems.length === 0) {
-      cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
-    } else {
-      cartItems.forEach(item => {
-        const cartItemElement = document.createElement('div');
-        cartItemElement.classList.add('cart-item');
-  
-        const titleElement = document.createElement('h3');
-        titleElement.innerText = item.title;
-  
-        const quantityElement = document.createElement('p');
-        quantityElement.innerText = `Quantity: ${item.quantity}`;
-  
-        const priceElement = document.createElement('p');
-        priceElement.innerText = `Price: $${item.price}`;
-  
-        cartItemElement.appendChild(titleElement);
-        cartItemElement.appendChild(quantityElement);
-        cartItemElement.appendChild(priceElement);
-  
-        cartItemsContainer.appendChild(cartItemElement);
-      });
-    }
-  }
-  
-  function calculateCartTotal() {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    let total = 0;
-  
-    cartItems.forEach(item => {
-      total += item.price * item.quantity;
-    });
-  
-    const totalElement = document.getElementById('cart-total');
-    totalElement.innerHTML = `Total: $${total.toFixed(2)}`;
-  }
-  
-  async function getBookDetails(bookId) {
-    try {
-      const response = await fetch(`https://632b4aa31090510116d6319b.mockapi.io/books/${bookId}`);
-      const book = await response.json();
-      return book;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  
-  async function initCartPage() {
-    displayCartItems();
-    calculateCartTotal();
-  
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const cartItemsWithDetails = [];
-  
-    for (const item of cartItems) {
-      const book = await getBookDetails(item.id);
-      const cartItemWithDetails = {
-        ...book,
-        quantity: item.quantity
-      };
-      cartItemsWithDetails.push(cartItemWithDetails);
-    }
-  
-    displayCartItems(cartItemsWithDetails);
-  }
-  
-  initCartPage();
-  
-  
+import { navbar, basketItems } from "./navbar.js";
+navbar();
+basketItems();
+
+let basket = JSON.parse(localStorage.getItem('basket'));
+
+const createTable = () => {
+	document.querySelector(".tableDiv").innerHTML = `
+		<table class="table">
+			<tr>
+				<th>Image</th>
+				<th>Title</th>
+				<th>Author</th>
+				<th>Price</th>
+				<th>Quantity</th>
+				<th>Remove</th>
+			</tr>
+		</table>`;
+	const table = document.querySelector('.table');
+	basket.forEach(book => {
+		let row = table.insertRow(1);
+		let cell1 = row.insertCell(0);
+		let cell2 = row.insertCell(1);
+		let cell3 = row.insertCell(2);
+		let cell4 = row.insertCell(3);
+		let cell5 = row.insertCell(4);
+		let cell6 = row.insertCell(5);
+		cell1.innerHTML = `<a href="details.html?id=${book.id}"><img class="cartImg" src=${book.book_image}></img></a>`;
+		cell2.innerHTML = `<a href="details.html?id=${book.id}">${book.title.toLowerCase()}</a>`;
+		cell3.textContent = book.author;
+		cell4.innerHTML = `<p class="greenText">$${book.price}</p>`;
+		cell5.innerHTML = `<i class="fa-solid fa-minus redText marginRight" data-product-id=${book.id}>
+			</i>${book.items}<i class="fa-solid fa-plus greenText marginLeftS" data-product-id=${book.id}></i>`;
+		cell6.innerHTML = `<a class="redBtn remove" data-product-id=${book.id}>
+			<i class="fa-solid fa-trash marginRight remove" data-product-id=${book.id}></i>Remove</a>`;
+	});
+};
+
+const buyTable = () => {
+	let total = 0;
+	let items = 0;
+	if (basket) {
+		basket.forEach((book) => {
+			total += Number(book.price) * book.items;
+			items += book.items;
+		});
+	}
+	document.querySelector(".items").textContent = items;
+	document.querySelector(".totalPrice").textContent = `$${total}`;
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+	buyTable();
+	if (basket.length > 0) createTable();
+});
+
+document.querySelector('.tableDiv').addEventListener('click', (e) => {
+	const bookInBasket = basket.find((book) =>
+			book.id === e.target.getAttribute('data-product-id'));
+
+	if (e.target.classList.contains('fa-plus')) {
+		if (bookInBasket.items < bookInBasket.stock) {
+			bookInBasket.items++;
+			createTable();
+			buyTable();
+		} else if (bookInBasket.items === Number(bookInBasket.stock)) {
+			alert("Stock limit reached.");
+		}
+	} else if (e.target.classList.contains('fa-minus')) {
+		if (bookInBasket.items > 1) {
+			bookInBasket.items--;
+			createTable();
+			buyTable();
+		}
+	} else if (e.target.classList.contains('remove')) {
+		basket = basket.filter((product) => product.id != bookInBasket.id);
+		createTable();
+		if (basket.length === 0) document.querySelector('.table').remove();
+		buyTable();
+	}
+	localStorage.setItem('basket', JSON.stringify(basket));
+	basketItems();
+});
+
+document.querySelector('.buyBooksBtn').addEventListener('click', () => {
+	alert("You cannot buy things here, this is just a personal project.");
+});
